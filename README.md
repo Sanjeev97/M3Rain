@@ -174,5 +174,3 @@ If you use this work in your research, please cite:
 For questions and support, please open an issue on GitHub or contact [contact information].
 
 ---
-
-**Note**: This project requires significant computational resources for data processing and model training. Consider using cloud computing resources for large-scale experiments.
