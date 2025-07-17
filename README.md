@@ -186,7 +186,7 @@ python test_transformer.py \
 - **PCC**: Pearson Correlation Coefficient
 - **CSI**: Critical Success Index (for rainfall detection)
 
-Performance is evaluated using both regression metrics (RMSE, R², correlation) and precipitation detection metrics (CSI, precision, recall).
+Performance is evaluated using both regression metrics (RMSE, MAE, R², correlation) and precipitation detection metrics CSI.
 
 ## Citation
 
