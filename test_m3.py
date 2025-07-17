@@ -77,8 +77,8 @@ def get_args_parser():
     parser.set_defaults(pin_mem=True)
 
     # H5 dataset path
-    parser.add_argument('--h5_file', type=str, default='/home/C00535626/Radar-Rainfall/M3/data/klch_radar_pws_aligned_100km_20P_composite4.h5',
-                        help='Path to the HDF5 file containing aligned radar and PWS data')
+    parser.add_argument('--h5_file', type=str, default='./data/klch_radar_pws_aligned_100km_20P_composite4.h5',
+                        help='Path to the HDF5 file containing  aligned radar and PWS data')
     parser.add_argument('-sf', '--save_freq', type=int, default=20)
 
     # pvt_mmt
