@@ -58,69 +58,6 @@ def calculate_csi(observed, predicted, threshold=1.0):
     return tp / (tp + fp + fn)
 
 
-def calculate_precision(observed, predicted, threshold=1.0):
-    """
-    Calculate Precision
-    
-    Parameters:
-    observed (array-like): Actual rainfall values
-    predicted (array-like): Predicted rainfall values
-    threshold (float): Threshold for rain/no-rain classification
-    
-    Returns:
-    float: Precision value (0 to 1, where 1 is perfect)
-    """
-    obs_binary = (np.array(observed) >= threshold).astype(int)
-    pred_binary = (np.array(predicted) >= threshold).astype(int)
-    
-    cm = confusion_matrix(obs_binary, pred_binary)
-    
-    # Handle edge cases
-    if cm.shape == (1, 1):
-        return 1.0 if obs_binary[0] == pred_binary[0] else 0.0
-    
-    tn, fp, fn, tp = cm.ravel()
-    
-    if tp + fp == 0:
-        return 1.0
-    
-    return tp / (tp + fp)
-
-def calculate_recall(observed, predicted, threshold=1.0):
-    obs_binary = (np.array(observed) >= threshold).astype(int)
-    pred_binary = (np.array(predicted) >= threshold).astype(int)
-    
-    # Count manually instead of relying on confusion_matrix edge cases
-    tp = np.sum((obs_binary == 1) & (pred_binary == 1))
-    fn = np.sum((obs_binary == 1) & (pred_binary == 0))
-    
-    if tp + fn == 0:  # No actual positive cases
-        return 1.0  # Undefined, but conventionally 1.0
-    
-    return tp / (tp + fn)
-
-
-def calculate_f1_score(observed, predicted, threshold=1.0):
-    """
-    Calculate F1-Score
-    
-    Parameters:
-    observed (array-like): Actual rainfall values
-    predicted (array-like): Predicted rainfall values
-    threshold (float): Threshold for rain/no-rain classification
-    
-    Returns:
-    float: F1-Score value (0 to 1, where 1 is perfect)
-    """
-    precision = calculate_precision(observed, predicted, threshold)
-    recall = calculate_recall(observed, predicted, threshold)
-    
-    if precision + recall == 0:
-        return 0.0
-    
-    return 2 * (precision * recall) / (precision + recall)
-
-
 def evaluate_test(y_true, y_pred):
     rmse = RMSE(y_true, y_pred)
     mae = np.mean(np.abs(y_true - y_pred))
@@ -130,18 +67,10 @@ def evaluate_test(y_true, y_pred):
     threshold = 0.1
     observed = y_true
     predicted = y_pred
-    
     print(f"CSI: {calculate_csi(observed, predicted, threshold):.3f}")
-    print(f"Precision: {calculate_precision(observed, predicted, threshold):.3f}")
-    print(f"Recall: {calculate_recall(observed, predicted, threshold):.3f}")
-    print(f"F1-Score: {calculate_f1_score(observed, predicted, threshold):.3f}")        
-
+       
     threshold = 10
-    
     print(f"CSI: {calculate_csi(observed, predicted, threshold):.3f}")
-    print(f"Precision: {calculate_precision(observed, predicted, threshold):.3f}")
-    print(f"Recall: {calculate_recall(observed, predicted, threshold):.3f}")
-    print(f"F1-Score: {calculate_f1_score(observed, predicted, threshold):.3f}")  
 
     return rmse, mae, r2, pcc
     # return rmse, r2, pcc
@@ -156,6 +85,3 @@ if __name__ == "__main__":
     threshold = 0.1
     
     print(f"CSI: {calculate_csi(observed, predicted, threshold):.3f}")
-    print(f"Precision: {calculate_precision(observed, predicted, threshold):.3f}")
-    print(f"Recall: {calculate_recall(observed, predicted, threshold):.3f}")
-    print(f"F1-Score: {calculate_f1_score(observed, predicted, threshold):.3f}")  
