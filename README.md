@@ -15,8 +15,18 @@ The model uses a multi-modal transformer architecture (M3) that processes radar 
 The M3 (Multi-Modal Meteorological) transformer consists of:
 - **Vision Transformer Encoder**: Processes radar image patches
 - **Time Series Encoder**: Encodes PWS meteorological features
-- **Multi-Modal Attention**: Cross-attention between visual and temporal modalities
+- **Multi-Modal Attention**: Attention between visual and temporal modalities
 - **Temporal Decoder**: Generates rainfall predictions
+
+### Baseline Models
+
+The repository also includes several baseline models for comparison:
+- **DLinear**: Decomposition-Linear model for time series forecasting
+- **PatchTST**: Patch-based Time Series Transformer
+- **iTransformer**: Inverted Transformer for multivariate time series
+- **M3T**: Basic multi-modal transformer baseline
+
+Each baseline model has been adapted with M3Rain-specific configurations (DLinearnM3, PatchTSTnM3, iTnM3).
 
 ## Dataset
 
@@ -42,18 +52,37 @@ M3Rain/
 │       ├── 4-extract-lakecharles.py    # Extract Lake Charles region
 │       ├── 5-interpolate-composite4v1-radar-verify.py  # Create composite reflectivity
 │       ├── 5-interpolate-pws.py        # Interpolate PWS data
-│       └── 6-filter-align-radar-pws-20.py  # Align radar and PWS data
+│       ├── 6-filter-align-radar-pws-20.py  # Align radar and PWS data
+│       ├── preprocessing_pws.ipynb     # PWS data preprocessing notebook
+│       └── preprocessing_radar.ipynb   # Radar data preprocessing notebook
 ├── dataset/
 │   ├── aligned_dataset.py      # HDF5 dataset loader
 │   └── data_wrapper.py         # Data augmentation wrapper
-├── models/
-│   └── m3.py                   # M3 transformer architecture
+├── layers/                     # Neural network layer components
+│   ├── Embed.py               # Embedding layers
+│   ├── SelfAttention_Family.py # Attention mechanisms
+│   ├── Transformer_EncDec.py  # Transformer encoder/decoder
+│   └── __init__.py
+├── models/                     # Model architectures
+│   ├── DLinear.py             # DLinear baseline model
+│   ├── DLinearnM3.py          # DLinear adapted for M3Rain
+│   ├── PatchTST.py            # PatchTST time series transformer
+│   ├── PatchTSTnM3.py         # PatchTST adapted for M3Rain
+│   ├── iTransformer.py        # iTransformer model
+│   ├── iTnM3.py               # iTransformer adapted for M3Rain
+│   ├── m3.py                  # M3 transformer architecture
+│   ├── transformer.py        # Basic transformer model
+│   └── __init__.py
+├── modules/
+│   └── attention.py           # Attention mechanism implementations
 ├── util/
 │   ├── lr_sched.py            # Learning rate scheduling
 │   ├── metrics.py             # Evaluation metrics
 │   └── misc.py                # Utility functions
-├── run_m3.py                  # Training script
-└── test_m3.py                 # Testing/evaluation script
+├── run_m3.py                  # M3 model training script
+├── test_m3.py                 # M3 model testing/evaluation script
+├── run_transformer.py         # Baseline models training script
+└── test_transformer.py        # Baseline models testing script
 ```
 
 ## Installation
@@ -71,6 +100,11 @@ M3Rain/
 - scikit-learn
 - matplotlib
 - tqdm
+
+### Model-Specific Dependencies
+- **Attention Mechanisms**: einops for tensor operations
+- **Time Series Models**: layers from this repository
+- **Baseline Models**: Custom implementations included
 
 ### Radar Data Processing Tools
 - RadxConvert (from LROSE/Radx toolkit)
@@ -125,18 +159,25 @@ python Scripts/Radar/6-filter-align-radar-pws-20.py
 
 ## Model Training
 
-python run_m3.py 
+### M3 Model Training
+python run_m3.py \
 
-### Key Training Parameters
-- **Learning Rate**: 1e-3 with cosine annealing
-- **Batch Size**: 64
-- **Optimizer**: AdamW with weight decay
-- **Loss Function**: MSE Loss
-- **Data Split**: 85% train, 15% test
+
+### Baseline Models Training
+python run_transformer.py \
+
+
+All baseline models are configured for 4-step input and 4-step prediction with 20 PWS features.
 
 ## Model Evaluation
 
+### M3 Model Evaluation
 python test_m3.py \
+
+
+### Baseline Models Evaluation
+python test_transformer.py \
+
 
 ### Metrics
 - **RMSE**: Root Mean Square Error
@@ -144,7 +185,8 @@ python test_m3.py \
 - **R²**: Coefficient of Determination
 - **PCC**: Pearson Correlation Coefficient
 - **CSI**: Critical Success Index (for rainfall detection)
-- **Precision/Recall/F1**: Binary classification metrics
+
+Performance is evaluated using both regression metrics (RMSE, R², correlation) and precipitation detection metrics (CSI, precision, recall).
 
 ## Citation
 
@@ -158,8 +200,6 @@ If you use this work in your research, please cite:
   year={2024}
 }
 ```
-
-## License
 
 
 ## Acknowledgments
