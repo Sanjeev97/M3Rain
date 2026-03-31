@@ -1,4 +1,4 @@
-# M3Rain - Multi-Modal Meteorological Transformer for Rainfall Prediction
+# M3Rain - Multi-Modal Meteorological Transformer for Rainfall Prediction (ICME 2026)
 
 A deep learning framework that combines weather radar imagery and personal weather station (PWS) data for accurate rainfall prediction using a novel multi-modal transformer architecture.
 
@@ -209,8 +209,5 @@ If you use this work in your research, please cite:
 - LROSE team for radar data processing tools
 - PyTorch and timm communities for deep learning frameworks
 
-## Contact
-
-For questions and support, please open an issue on GitHub or contact [contact information].
 
 ---
